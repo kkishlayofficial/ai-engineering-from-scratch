@@ -257,6 +257,19 @@ class Rewriter:
     def rewrite_hyde(self, query: str) -> str | None:
         return _REWRITE_HYDE.get(query.lower().strip().rstrip("?"))
 
+    def rewrite_multiquery(self, query: str) -> list[str]:
+        base = query.strip().rstrip("?")
+        toks = [t for t in tokenize(base) if t not in _STOP]
+        variants: list[str] = [base]
+        if toks:
+            variants.append(" ".join(toks))
+        return list(dict.fromkeys(v for v in variants if v))
+
+    def rewrite_decompose(self, query: str) -> list[str]:
+        parts = re.split(r"\s+and\s+", query, flags=re.IGNORECASE)
+        out = [p.strip().rstrip("?") for p in parts if p.strip()]
+        return out or [query.strip().rstrip("?")]
+
 
 # ---------------------------------------------------------------------------
 # cross-encoder reranker (compressed from lesson 66)
@@ -477,11 +490,23 @@ class Pipeline:
         t0 = time.perf_counter()
         strategy = self.rewriter.pick_strategy(question)
         hypothetical = self.rewriter.rewrite_hyde(question) if strategy == "hyde" else None
+        subqueries: list[str] = []
+        if strategy == "multiquery":
+            subqueries = self.rewriter.rewrite_multiquery(question)
+        elif strategy == "decompose":
+            subqueries = self.rewriter.rewrite_decompose(question)
         t1 = time.perf_counter()
         latencies["rewrite"] = (t1 - t0) * 1000
 
         if hypothetical:
             candidates = self.index.search_with_hypothetical(question, hypothetical, k_out=self.top_n)
+        elif len(subqueries) > 1:
+            rankings: list[list[tuple[Chunk, float]]] = []
+            for q in subqueries:
+                hits = self.index.search(q, k_out=self.top_n)
+                rankings.append([(c, 1.0) for c in hits])
+            fused = rrf(rankings)
+            candidates = [c for c, _ in fused[: self.top_n]]
         else:
             candidates = self.index.search(question, k_out=self.top_n)
         t2 = time.perf_counter()
