@@ -1013,6 +1013,7 @@ body.js-anim .toc-row.in-view {
 @media (max-width: 480px) {
   body {
     font-size: 16px;
+    padding: 0 20px;
   }
 
   .header-inner {

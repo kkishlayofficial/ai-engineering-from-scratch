@@ -367,16 +367,16 @@
       var chipClass = 'cp-item-chip';
 
       if (r.kind === 'lesson') {
-        // Prefer the in-site reader; fall back to GitHub URL
+        // Prefer the in-site reader; fall back to catalog
         dest = r.lessonPath
           ? 'lesson.html?path=' + encodeURIComponent(r.lessonPath)
-          : r.url;
+          : 'catalog.html';
         chip = 'Phase ' + String(r.phaseId).padStart(2, '0');
       } else if (r.kind === 'artifact') {
         // Jump to the lesson that produced this artifact
         dest = r.lessonPath
           ? 'lesson.html?path=' + encodeURIComponent(r.lessonPath)
-          : ('https://github.com/rohitg00/ai-engineering-from-scratch/tree/main/' + r.file);
+          : 'catalog.html';
         var ak = (r.artKind || 'artifact');
         chip = ak.charAt(0).toUpperCase() + ak.slice(1);
         chipClass += ' cp-item-chip--alt';
