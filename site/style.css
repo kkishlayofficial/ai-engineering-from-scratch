@@ -352,6 +352,56 @@ p.dropcap::first-letter {
   color: var(--blueprint);
 }
 
+/* ── Firebase sync button ─────────────────────────────────────────────────── */
+.aifs-auth-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid var(--rule-soft);
+  padding: 0 10px;
+  height: 36px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.aifs-auth-btn:hover {
+  border-color: var(--blueprint);
+  color: var(--blueprint);
+}
+
+.aifs-sync-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.aifs-sync-dot[data-sync="syncing"] {
+  background: var(--ink-mute);
+  animation: aifs-pulse 1s ease-in-out infinite;
+}
+
+.aifs-sync-dot[data-sync="ok"] {
+  background: #22c55e;
+}
+
+.aifs-sync-dot[data-sync="error"] {
+  background: #ef4444;
+}
+
+@keyframes aifs-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
 .btn {
   font-family: var(--font-mono);
   font-size: 0.8rem;

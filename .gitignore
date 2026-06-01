@@ -32,6 +32,9 @@ Cargo.lock
 *.pem
 *.key
 
+# firebase-config.js is intentionally committed — Firebase web credentials are
+# public by design. Security is enforced by Firestore Rules, not by hiding keys.
+
 .DS_Store
 Thumbs.db
 *.swp
