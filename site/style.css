@@ -352,29 +352,7 @@ p.dropcap::first-letter {
   color: var(--blueprint);
 }
 
-/* ── Firebase sync button ─────────────────────────────────────────────────── */
-.aifs-auth-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: transparent;
-  border: 1px solid var(--rule-soft);
-  padding: 0 10px;
-  height: 36px;
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s;
-}
-
-.aifs-auth-btn:hover {
-  border-color: var(--blueprint);
-  color: var(--blueprint);
-}
+/* ── Firebase sync button — reuses .header-github; only dot styles needed ── */
 
 .aifs-sync-dot {
   width: 6px;

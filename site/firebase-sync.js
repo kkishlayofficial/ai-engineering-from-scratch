@@ -144,15 +144,17 @@
     var nav = document.querySelector('.header-nav');
     if (!nav) return;
 
-    var btn = document.createElement('button');
+    var btn = document.createElement('a');
     btn.id        = 'aifsAuthBtn';
-    btn.className = 'aifs-auth-btn';
+    btn.className = 'header-github aifs-auth-btn';
+    btn.href      = '#';
     btn.setAttribute('title', 'Sign in with Google to sync progress across devices');
     btn.setAttribute('aria-label', 'Sync progress');
+    btn.setAttribute('role', 'button');
     btn.innerHTML =
       '<span class="aifs-auth-label" id="aifsAuthLabel">Sync</span>' +
       '<span class="aifs-sync-dot" id="aifsSyncDot"></span>';
-    btn.addEventListener('click', handleAuthClick);
+    btn.addEventListener('click', function (e) { e.preventDefault(); handleAuthClick(); });
     nav.appendChild(btn);
   }
 
