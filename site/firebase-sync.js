@@ -166,10 +166,28 @@
     } else {
       var provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider).catch(function (e) {
-        console.warn('[aifs-firebase] sign-in failed', e);
+        // Popup blocked or unauthorized domain — fall back to redirect
+        if (
+          e.code === 'auth/popup-blocked' ||
+          e.code === 'auth/popup-closed-by-user' ||
+          e.code === 'auth/unauthorized-domain'
+        ) {
+          auth.signInWithRedirect(provider);
+        } else {
+          console.warn('[aifs-firebase] sign-in failed', e);
+        }
       });
     }
   }
+
+  // Handle the redirect result on page load
+  auth.getRedirectResult().then(function (result) {
+    if (result && result.user) {
+      // Handled by onAuthStateChanged below
+    }
+  }).catch(function (e) {
+    console.warn('[aifs-firebase] redirect result failed', e);
+  });
 
   function updateButtonLabel(user) {
     var label = document.getElementById('aifsAuthLabel');
